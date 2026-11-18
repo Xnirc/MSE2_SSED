@@ -66,17 +66,15 @@ jobs:
         env:
           POSTGRES_PASSWORD_SECRET: ${{ secrets.POSTGRES_PASSWORD }}
         run: |
-          DB_PASSWORD="${POSTGRES_PASSWORD_SECRET:-deployment_change_me}"
-          cat > .env <<EOF
-          POSTGRES_DB=taskflow
-          POSTGRES_USER=taskflow_user
-          POSTGRES_PASSWORD=${DB_PASSWORD}
-          DATABASE_URL=postgresql://taskflow_user:${DB_PASSWORD}@postgres:5432/taskflow
-          REDIS_URL=redis://redis:6379
-          JWT_SECRET=replace_with_a_long_random_secret
-          PORT=3000
-          DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-          EOF
+          DB_PASSWORD="${POSTGRES_PASSWORD_SECRET:-change_this_db_password}"
+          echo "POSTGRES_DB=taskflow" > .env
+          echo "POSTGRES_USER=taskflow_user" >> .env
+          echo "POSTGRES_PASSWORD=${DB_PASSWORD}" >> .env
+          echo "DATABASE_URL=postgresql://taskflow_user:${DB_PASSWORD}@postgres:5432/taskflow" >> .env
+          echo "REDIS_URL=redis://redis:6379" >> .env
+          echo "JWT_SECRET=replace_with_a_long_random_secret" >> .env
+          echo "PORT=3000" >> .env
+          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
 
       - name: Validate image-based deployment Compose
         run: |
